@@ -90,6 +90,8 @@ class HTMLGenerator:
                 lines.append(line)
             else:
                 line = line.split(' ')
+                line.insert(0, '<p>')
+                line.append('</p>')
                 lines.append(line)
 
         self.lines = lines
@@ -130,15 +132,6 @@ class HTMLGenerator:
 
         self.lines = lines
 
-    def add_parentheses(self):
-        lines = []
-        for word in self.lines:
-            if word.isalnum():
-                word = f'<p>{word}</p>'
-            lines.append(word)
-
-        self.lines = lines
-
     def print(self):
         self.split_for_lines(self.text)
         self.check_for_headings_in_lines()
@@ -158,13 +151,12 @@ class HTMLGenerator:
         self.check_for_single_char('*', '*', 'em')
         self.check_for_double_char('_!', '!_', 'ins')
         self.check_for_double_char('-!', '!-', 'del')
-        self.add_parentheses()
         for word in self.lines:
             print(word)
 
 
 if __name__ == "__main__":
-    generator = HTMLGenerator("{safa|sf}>>XD<< >>XD<< W **Ddddd** *[link|text]* **WWw** _!pwoep!_ -!safasf!- dfsg **[link|text]"
+    generator = HTMLGenerator("{safa|sf}>>XD<< >>XD<< W **Ddddd** *[link|text]* **WWw** _!pwoep!_ -!safasf!- dfsg\nx **[link|text]"
                               "#xdddddxd [link|text]#xddddddd")
 
     generator.print()
