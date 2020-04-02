@@ -1,3 +1,6 @@
+import sys
+
+
 class HTMLGenerator:
     def __init__(self, text):
         self.text = text
@@ -52,14 +55,17 @@ class HTMLGenerator:
             self.word = "<p>{}</p>".format(self.word[0:])
 
     def link_text(self):
-        while "[" in self.line and "|" in self.line and "]" in self.line:
-            left_parenthesis_index = self.line.index("[")
-            line_index = self.line.index("|")
-            right_parenthesis_index = self.line.index("]")
-            link = self.line[left_parenthesis_index + 1:line_index]
-            text = self.line[line_index + 1:right_parenthesis_index]
-            self.line = self.line[0:left_parenthesis_index] + '<a href="{}">{}</a>'.format(link, text) + \
-                        self.line[right_parenthesis_index+1:]
+        while "[" in self.line and "|" in self.line:
+            if "]" in self.line:
+                left_parenthesis_index = self.line.index("[")
+                line_index = self.line.index("|")
+                right_parenthesis_index = self.line.index("]")
+                link = self.line[left_parenthesis_index + 1:line_index]
+                text = self.line[line_index + 1:right_parenthesis_index]
+                self.line = self.line[0:left_parenthesis_index] + '<a href="{}">{}</a>'.format(link, text) + \
+                    self.line[right_parenthesis_index+1:]
+            else:
+                sys.exit(f'Niepoprawnie domknięte znaki! ---> [link|text] Wyszukaj błąd ręcznie.')
 
     def check_line(self):
         if '\n' in self.text:
@@ -97,16 +103,72 @@ class HTMLGenerator:
             self.line = self.line.split()
             self.output += "\n"
             for self.word in self.line:
-                if ">>" in self.word and "<<" in self.word:
-                    self.sharp_parentheses()
-                elif self.word[0] == "*" and self.word[1] != "*" and self.word[-1] == "*":
-                    self.one_star()
-                elif self.word[0] == "*" and self.word[1] == "*" and self.word[-1] == "*" and self.word[-2] == "*":
-                    self.two_stars()
-                elif self.word[0] == "_" and self.word[1] == "!" and self.word[-1] == "_" and self.word[-2] == "!":
-                    self.underscore_exclamation()
-                elif self.word[0] == "-" and self.word[1] == "!" and self.word[-1] == "-" and self.word[-2] == "!":
-                    self.dash_exclamation()
+                if ">>" in self.word:
+                    if '<<' in self.word:
+                        index_one = self.word.index('>>')
+                        index_two = self.word.index('<<')
+                        if index_one < index_two:
+                            self.sharp_parentheses()
+                        else:
+                            sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+                    else:
+                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+                elif self.word[0] == "*" and self.word[1] != "*":
+                    if self.word[-1] == "*" and self.word[-2] != "*":
+                        index_one = self.word.index('*')
+                        index_two = self.word.index('*', index_one+1)
+                        if index_one < index_two:
+                            self.one_star()
+                        else:
+                            sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+                    else:
+                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+
+                elif self.word[0] == "*" and self.word[1] == "*":
+                    if self.word[-1] == "*" and self.word[-2] == "*":
+                        index_one = self.word.index('*')
+                        index_two = self.word.index('*', index_one + 2)
+                        if index_one < index_two:
+                            self.two_stars()
+                        else:
+                            sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+                    else:
+                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+
+                elif self.word[0] == "_" and self.word[1] == "!":
+                    if self.word[-1] == "_":
+                        if self.word[-2] == "!":
+                            index_one = self.word.index('!')
+                            index_two = self.word.index('!', index_one + 1)
+                            if index_one < index_two:
+                                self.underscore_exclamation()
+                            else:
+                                sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+                        else:
+                            sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+                    else:
+                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+
+                elif self.word[0] == "-" and self.word[1] == "!":
+                    if self.word[-1] == "-" and self.word[-2] == "!":
+                        index_one = self.word.index('!')
+                        index_two = self.word.index('!', index_one + 1)
+                        if index_one < index_two:
+                            self.dash_exclamation()
+                        else:
+                            sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
+                    else:
+                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {self.word}')
                 elif self.word[0] != "[":
                     self.paragraph()
                 self.output += self.word + " "
+
+
+if __name__ == "__main__":
+    generator = HTMLGenerator("#>>XD<< XD W **Ddddd** *[link|text]* **WWw** _!pwoep!_ -!safasf!- dfsg >>[link|text]<<\n"
+                              "#xdddddxd [link|text]")
+    generator.check_line()
+    generator.characters()
+    generator.delete_first_line()
+    generator.output_line()
+    generator.print()
