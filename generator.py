@@ -109,6 +109,6 @@ class HTMLGenerator:
 
 if __name__ == "__main__":
 
-    input_text = None
+    input_text = ""
     generator = HTMLGenerator(input_text)
     generator.output()
