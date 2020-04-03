@@ -82,17 +82,21 @@ Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: >>przykładowy_tekst {typ|Tytuł
 ### Jak uruchomić skrypt
 
 ```
-Stwórz nowy plik .txt, napisz w nim tekst sformatowany powyżej podanymi znacznikami i wklej go do folderu z projektem gdzie znajduje się plik "generator.py"
+Stwórz nowy plik .txt, napisz w nim tekst sformatowany powyżej podanymi znacznikami
 ```
 ```
-Uruchom terminal z wybranym folderem "HTML-Code-Generator-Script>" i wpisz komende python generator.py --file_name [twoja_nazwa_pliku] | Przykład ---> python generator.py plik_tekstowy
+Wklej go do folderu z projektem gdzie znajduje się plik "generator.py"
+```
+```
+Uruchom terminal z wybranym folderem "HTML-Code-Generator-Script>"
+Wpisz komende python generator.py --file_name [twoja_nazwa_pliku] | Przykład ---> python generator.py plik_tekstowy
 ```
 
 Jeśli wykonałeś wszystko zgodnie z instrukcją, w folderze projektu powinien pojawić się nowy plik o nazwie "output.html", zawierający wygenerowany kod HTML
 
 ## Stworzony za pomocą
 
-* [Python 3.8](https://www.python.org/) - Użyty język programowania
+* [Python 3.8](https://www.python.org/) - język programowania
 
 ## Autor
 
