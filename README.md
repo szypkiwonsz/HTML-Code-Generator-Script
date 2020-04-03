@@ -83,13 +83,9 @@ Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: >>przykładowy_tekst {typ|Tytuł
 
 ```
 Stwórz nowy plik .txt, napisz w nim tekst sformatowany powyżej podanymi znacznikami
-```
-```
 Wklej go do folderu z projektem gdzie znajduje się plik "generator.py"
-```
-```
 Uruchom terminal z wybranym folderem "HTML-Code-Generator-Script>"
-Wpisz komende python generator.py --file_name [twoja_nazwa_pliku] | Przykład ---> python generator.py plik_tekstowy
+Wpisz komende python generator.py --file_name [twoja_nazwa_pliku]
 ```
 
 Jeśli wykonałeś wszystko zgodnie z instrukcją, w folderze projektu powinien pojawić się nowy plik o nazwie "output.html", zawierający wygenerowany kod HTML
