@@ -45,7 +45,6 @@ Objemuje całą linie jeśli jest pierwszym wyrazem
 
 ```
 {typ|Tytuł} Tekst ---> <aside cat=”typ”><header>Tytuł</header><main>Tekst</main></aside>
-
 ```
 ---
 
