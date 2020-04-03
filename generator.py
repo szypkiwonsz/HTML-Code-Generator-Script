@@ -32,6 +32,12 @@ class HTMLGenerator:
                         word = f'<strong>{word[2:-2]}</strong>'
                     else:
                         sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
+                # Checking if the word with stars is first in line.
+                elif word[0] == '\n' and word[1:3] == char_left:
+                    if word[-2:] == char_right:
+                        word = f'{word[0]}<strong>{word[3:-2]}</strong>'
+                    else:
+                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
                 lines += word + ' '
             lines += '\n'
         self.lines = [lines[:-2]]
@@ -46,11 +52,17 @@ class HTMLGenerator:
                             word = f'<em>{word[1:-1]}</em>'
                         else:
                             sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
+                    # Checking if the word with single star is first in line.
+                    elif word[0] == '\n' and word[1] == char_left and word[2] != '*':
+                        if word[-1] == char_right and word[-2] != '*':
+                            word = f'{word[0]}<em>{word[2:-1]}</em>'
+                        else:
+                            sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
                 except IndexError as e:
                     sys.exit(f'Nie możesz dodać spacji przed nową linią ---> "\\n", sprawdź wprowadzone dane.')
                 lines += word + ' '
             lines += '\n'
-        self.lines = [lines[:-2]]
+        self.lines = [lines[:-1]]
 
     def check_for_href(self):
         lines = ""
@@ -61,8 +73,12 @@ class HTMLGenerator:
                         index_left_parenthesis = word.index('[')
                         index_center = word.index('|')
                         index_right_parenthesis = word.index(']')
-                        word = f'<a href=”{word[index_left_parenthesis+1:index_center]}”>' \
-                            f'{word[index_center+1:index_right_parenthesis]}</a>'
+                        if word[0] == '\n':
+                            word = f'{word[0]}<a href=”{word[index_left_parenthesis+1:index_center]}”>' \
+                                f'{word[index_center+1:index_right_parenthesis]}</a>'
+                        else:
+                            word = f'<a href=”{word[index_left_parenthesis + 1:index_center]}”>' \
+                                f'{word[index_center + 1:index_right_parenthesis]}</a>'
                     else:
                         sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
                 lines += word + ' '
@@ -83,9 +99,9 @@ class HTMLGenerator:
                             aside_type = line[1:index_center]
                             aside_title = line[index_center+1:index_right_parenthesis]
                             line = f'<aside cat=”{aside_type}”><header>{aside_title}</header><main>' \
-                                f'{line[index_right_parenthesis+1:-1]}</main></aside>'
+                                f'{line[index_right_parenthesis+1:-1]} </main></aside>'
                 elif line[0] == '#':
-                    line = f'<h1 id=”{id_heading}X”>{line[1:-1]}</h1>'
+                    line = f'<h1 id=”{id_heading}X”>{line[1:-1]} </h1>'
                     id_heading += 1
                 else:
                     line = f'<p>{line[:-1]}</p>'
@@ -109,6 +125,6 @@ class HTMLGenerator:
 
 if __name__ == "__main__":
 
-    input_text = ""
+    input_text = open('your_text_file_name').read()
     generator = HTMLGenerator(input_text)
     generator.output()
