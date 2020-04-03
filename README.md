@@ -91,7 +91,7 @@ Wklej go do folderu z projektem gdzie znajduje się plik "generator.py"
 Uruchom terminal z wybranym folderem "HTML-Code-Generator-Script>"
 ```
 ```
-Wpisz komende: python generator.py --file_name tu_wpisz_swoją_nazwę_pliku_bez_rozszerzenia
+Wpisz komende: python generator.py --file_name [twoja_nazwa_pliku]
 ```
 
 Jeśli wykonałeś wszystko zgodnie z instrukcją, w folderze projektu powinien pojawić się nowy plik o nazwie "output.html", zawierający wygenerowany kod HTML
