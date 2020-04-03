@@ -27,42 +27,77 @@ _!przykładowy_tekst!_ ---> <ins>przykładowy_tekst</ins>
 ```
 ---
 
-Google Chrome
+Wewnątrz linii
 
 ```
-Update to the latest version or get the current one from - https://www.google.com/chrome/
-```
----
-
-selenium
-
-```
-pip install selenium
+[adres|tekst] ---> <a href=”adres”>tekst</a>
 ```
 ---
 
-### Running
-
-A step by step series of examples that tell you how to run a bot
+Obejmuje całą linię, jeśli pierwszym znakiem jest #, to robimy nagłówek
 
 ```
-Fill in your Facebook login details in the secrets.py file
+# Tekst ---> <h1 id=”nX”>Tekst</h1>
 ```
 ---
-Run a bot
+
+Objemuje całą linie jeśli jest pierwszym wyrazem
 
 ```
-python tinder_bot.py
+{typ|Tytuł} Tekst ---> <aside cat=”typ”><header>Tytuł</header><main>Tekst</main></aside>
+
 ```
 ---
-## Built With
 
-* [Python 3.8](https://www.python.org/) - The programming language used
+Linia nie tworząca nagłówka
 
-## Authors
+```
+przykładowy_tekst ---> <p>przykładowy_tekst</p>
+```
+---
+
+### Zasady wprowadzania znaków
+
+Każdy wyraz, znacznik musi być oddzielony od siebie spacją
+
+```
+Tak: **przykładowy_tekst** >>przykładowy_tekst2<< | Nie: **przykładowy_tekst**>>przykładowy_tekst2<<
+```
+---
+
+Jeśli chcemy zrobić nagłówek w linii, wyrazy po pierwszym znaku jakim jest "#" muszą być oddzielone od niego spacją
+
+```
+Tak: # przykładowy_tekst | Nie: #przykładowy_tekst
+```
+---
+
+Jeśli chcemy zrobić znaczik "<aside..." w linii, musimy dać podać znacznik na początku linii
+
+```
+Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: >>przykładowy_tekst {typ|Tytuł}
+```
+---
+
+### Jak uruchomić skrypt
+
+```
+Stwórz nowy plik .txt, napisz w nim tekst sformatowany powyżej podanymi znacznikami i wklej go do folderu z projektem gdzie znajduje się plik "generator.py"
+```
+```
+Uruchom terminal z wybranym folderem "HTML-Code-Generator-Script>" i wpisz komende python generator.py --file_name [twoja_nazwa_pliku] | Przykład ---> python generator.py plik_tekstowy
+```
+
+Jeśli wykonałeś wszystko zgodnie z instrukcją, w folderze projektu powinien pojawić się nowy plik o nazwie "output.html", zawierający wygenerowany kod HTML
+
+## Stworzony za pomocą
+
+* [Python 3.8](https://www.python.org/) - Użyty język programowania
+
+## Autor
 
 * **Jan Kacper Sawicki** - [szypkiwonsz](https://github.com/szypkiwonsz)
 
-## Acknowledgments
+## Informacje dodatkowe
 
-* The bot was created using the techniques from the given video - https://www.youtube.com/watch?v=lvFAuUcowT4&t
+* Skrypt został napisany jako zadanie na studia.
