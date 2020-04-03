@@ -1,3 +1,4 @@
+import argparse
 import sys
 
 
@@ -74,10 +75,10 @@ class HTMLGenerator:
                         index_center = word.index('|')
                         index_right_parenthesis = word.index(']')
                         if word[0] == '\n':
-                            word = f'{word[0]}<a href=”{word[index_left_parenthesis+1:index_center]}”>' \
+                            word = f'{word[0]}<a href="{word[index_left_parenthesis+1:index_center]}">' \
                                 f'{word[index_center+1:index_right_parenthesis]}</a>'
                         else:
-                            word = f'<a href=”{word[index_left_parenthesis + 1:index_center]}”>' \
+                            word = f'<a href="{word[index_left_parenthesis + 1:index_center]}">' \
                                 f'{word[index_center + 1:index_right_parenthesis]}</a>'
                     else:
                         sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
@@ -98,10 +99,10 @@ class HTMLGenerator:
                         if index_center < index_right_parenthesis:
                             aside_type = line[1:index_center]
                             aside_title = line[index_center+1:index_right_parenthesis]
-                            line = f'<aside cat=”{aside_type}”><header>{aside_title}</header><main>' \
+                            line = f'<aside cat="{aside_type}"><header>{aside_title}</header><main>' \
                                 f'{line[index_right_parenthesis+1:-1]} </main></aside>'
                 elif line[0] == '#':
-                    line = f'<h1 id=”{id_heading}X”>{line[1:-1]} </h1>'
+                    line = f'<h1 id="{id_heading}X">{line[1:-1]} </h1>'
                     id_heading += 1
                 else:
                     line = f'<p>{line[:-1]}</p>'
@@ -109,7 +110,14 @@ class HTMLGenerator:
                 lines_of_text += '\n'
             self.lines = [lines_of_text[:-1]]
 
+    @staticmethod
+    def write_to_file(name_of_file, data):
+        f = open(name_of_file, "w")
+        f.write(data)
+        f.close()
+
     def output(self):
+        text = ''
         self.split_to_lines()
         self.check_for_double_char('>>', '<<', 'q')
         self.check_for_stars('**', '**')
@@ -120,11 +128,20 @@ class HTMLGenerator:
         self.check_for_heading()
         self.lines = generator.lines[0].split('\n')
         for line in self.lines:
-            print(line)
+            text += line + '\n'
+        self.write_to_file('output.html', text)
+        print('---> Poprawnie zapisano dane do pliku output.html')
 
 
 if __name__ == "__main__":
 
-    input_text = open('your_text_file_name').read()
-    generator = HTMLGenerator(input_text)
-    generator.output()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--file_name", help="Wybiera plik z którego pobiera tekst.")
+
+    args = parser.parse_args()
+    if not any(vars(args).values()):
+        print("Nie podałeś nazwy pliku!")
+    elif args.file_name:
+        input_text = open(args.file_name).read()
+        generator = HTMLGenerator(input_text)
+        generator.output()
