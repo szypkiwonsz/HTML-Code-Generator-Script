@@ -95,6 +95,8 @@ Wpisz komende: python generator.py --file_name [twoja_nazwa_pliku]
 
 Jeśli wykonałeś wszystko zgodnie z instrukcją, w folderze projektu powinien pojawić się nowy plik o nazwie "output.html", zawierający wygenerowany kod HTML
 
+---
+
 ## Stworzony za pomocą
 
 * [Python 3.8](https://www.python.org/) - język programowania
