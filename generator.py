@@ -142,6 +142,9 @@ if __name__ == "__main__":
     if not any(vars(args).values()):
         print("Nie podałeś nazwy pliku!")
     elif args.file_name:
-        input_text = open(args.file_name).read()
-        generator = HTMLGenerator(input_text)
-        generator.output()
+        try:
+            input_text = open(args.file_name).read()
+            generator = HTMLGenerator(input_text)
+            generator.output()
+        except FileNotFoundError as e:
+            print('Nieprawidłowa nazwa pliku. Pamiętaj aby dodać rozszerzenie do nazwy pliku.')
