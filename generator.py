@@ -5,110 +5,78 @@ import sys
 class HTMLGenerator:
     def __init__(self, text):
         self.text = text
-        self.lines = None
+        self.raw_lines = self.text.split('\n')
+        self.lines = self.text.split('\n')
 
-    def split_to_lines(self):
-        self.lines = self.text.split("\n")
-
-    def check_for_double_char(self, char_left, char_right, html):
-        lines = ""
-        for line in self.lines:
-            for word in line.split(" "):
-                if char_left in word:
-                    if char_right in word:
-                        word = word.replace(char_left, f'<{html}>')
-                        word = word.replace(char_right, f'</{html}>')
-                    else:
-                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
-                lines += word + ' '
-            lines += '\n'
-        self.lines = [lines[:-2]]
-
-    def check_for_stars(self, char_left, char_right):
-        lines = ""
-        for line in self.lines:
-            for word in line.split(" "):
-                if word[0:2] == char_left:
-                    if word[-2:] == char_right:
-                        word = f'<strong>{word[2:-2]}</strong>'
-                    else:
-                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
-                # Checking if the word with stars is first in line.
-                elif word[0] == '\n' and word[1:3] == char_left:
-                    if word[-2:] == char_right:
-                        word = f'{word[0]}<strong>{word[3:-2]}</strong>'
-                    else:
-                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
-                lines += word + ' '
-            lines += '\n'
-        self.lines = [lines[:-2]]
-
-    def check_for_single_star(self, char_left, char_right):
-        lines = ""
-        for line in self.lines:
-            for word in line.split(' '):
+    def check_chars(self, open_char, close_char, new_open_char, new_close_char):
+        single_char = '*'
+        for i, line in enumerate(self.lines):
+            check = True
+            while check:
+                line = self.lines[i]
                 try:
-                    if word[0] == char_left and word[1] != '*':
-                        if word[-1] == char_right and word[-2] != '*':
-                            word = f'<em>{word[1:-1]}</em>'
-                        else:
-                            sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
-                    # Checking if the word with single star is first in line.
-                    elif word[0] == '\n' and word[1] == char_left and word[2] != '*':
-                        if word[-1] == char_right and word[-2] != '*':
-                            word = f'{word[0]}<em>{word[2:-1]}</em>'
-                        else:
-                            sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
-                except IndexError as e:
-                    sys.exit(f'Nie możesz dodać spacji przed nową linią ---> "\\n", sprawdź wprowadzone dane.')
-                lines += word + ' '
-            lines += '\n'
-        self.lines = [lines[:-1]]
-
-    def check_for_href(self):
-        lines = ""
-        for line in self.lines:
-            for word in line.split(' '):
-                if '[' in word and '|' in word:
-                    if ']' in word:
-                        index_left_parenthesis = word.index('[')
-                        index_center = word.index('|')
-                        index_right_parenthesis = word.index(']')
-                        if word[0] == '\n':
-                            word = f'{word[0]}<a href="{word[index_left_parenthesis+1:index_center]}">' \
-                                f'{word[index_center+1:index_right_parenthesis]}</a>'
-                        else:
-                            word = f'<a href="{word[index_left_parenthesis + 1:index_center]}">' \
-                                f'{word[index_center + 1:index_right_parenthesis]}</a>'
+                    open_char_index = line.index(open_char)
+                    close_char_index = line.index(close_char, open_char_index + 2)
+                    # Dodajemy znak '$' przed i po każdym nowym znaczniku,
+                    # aby nasze znaki nie połączyły się ze znacznikami html.
+                    if open_char == single_char:
+                        self.lines[i] = f'{line[:open_char_index]}${new_open_char}$' \
+                            f'{line[open_char_index + 1:close_char_index]}${new_close_char}$' \
+                            f'{line[close_char_index + 1:]}'
                     else:
-                        sys.exit(f'Niepoprawnie domknięte znaki! ---> {word}')
-                lines += word + ' '
-            lines += '\n'
-        self.lines = [lines[:-2]]
+                        self.lines[i] = f'{line[:open_char_index]}${new_open_char}$' \
+                            f'{line[open_char_index + 2:close_char_index]}${new_close_char}$' \
+                            f'{line[close_char_index + 2:]}'
+                except ValueError:
+                    check = False
+            # Usuwamy wszystkie znaki dolara z linii.
+            self.lines[i] = self.lines[i].replace('$', '')
 
-    def check_for_heading(self):
-        lines_of_text = ""
-        id_heading = 0
-        for lines in self.lines:
-            lines = (lines.split('\n'))
-            for line in lines:
-                if line[0] == '{':
-                    if '|' in line and '}' in line:
-                        index_center = line.index('|')
-                        index_right_parenthesis = line.index('}')
-                        if index_center < index_right_parenthesis:
-                            aside_type = line[1:index_center]
-                            aside_title = line[index_center+1:index_right_parenthesis]
-                            line = f'<aside cat="{aside_type}"><header>{aside_title}</header><main>' \
-                                f'{line[index_right_parenthesis+1:-1]} </main></aside>'
-                elif line[0] == '#':
-                    line = f'<h1 id="{id_heading}X">{line[1:-1]} </h1>'
-                    id_heading += 1
+    def check_heading(self):
+        id_header = 0
+        for i, line in enumerate(self.lines):
+            if line[0] == '#':
+                self.lines[i] = f'<h1 id="{id_header}X">{line[1:]}</h1>'
+                id_header += 1
+            elif '{' in line and '|' in line and '}' in line:
+                index_left_parenthesis = line.index('{')
+                index_center = line.index('|')
+                index_right_parenthesis = line.index('}')
+                if index_left_parenthesis < index_center < index_right_parenthesis:
+                    aside_type = line[index_left_parenthesis + 1:index_center]
+                    header_title = line[index_center + 1:index_right_parenthesis]
+                    main_text = line[:index_left_parenthesis] + line[index_right_parenthesis+1:]
+                    self.lines[i] = f'<aside cat="{aside_type}"><header>{header_title}</header><main>{main_text}' \
+                        f'</main></aside>'
                 else:
-                    line = f'<p>{line[:-1]}</p>'
-                lines_of_text += line
-                lines_of_text += '\n'
-            self.lines = [lines_of_text[:-1]]
+                    sys.exit(f'Niepoprawnie utworzony nagłówek w linii ---> {self.raw_lines[i]}')
+            else:
+                self.lines[i] = f'<p>{line}</p>'
+
+    def check_href(self):
+        for i, line in enumerate(self.lines):
+            check = True
+            while check:
+                line = self.lines[i]
+                try:
+                    index_left_parenthesis = line.index('[')
+                    index_center = line.index('|')
+                    index_right_parenthesis = line.index(']')
+                    if index_left_parenthesis < index_center < index_right_parenthesis:
+                        href_address = line[index_left_parenthesis + 1:index_center]
+                        href_text = line[index_center + 1:index_right_parenthesis]
+                        self.lines[i] = f'{line[:index_left_parenthesis]}<a href="{href_address}">{href_text}</a>' \
+                            f'{line[index_right_parenthesis + 1:]}'
+                    else:
+                        sys.exit(f'Niepoprawnie utworzony atrybut "<a href" w linii ---> {self.raw_lines[i]}')
+                except ValueError:
+                    check = False
+
+    def check_correct_characters(self, chars, message):
+        for i, line in enumerate(self.lines):
+            for char in chars:
+                if char in line:
+                    sys.exit(f'{message} ---> {self.raw_lines[i]}')
 
     @staticmethod
     def write_to_file(name_of_file, data):
@@ -118,15 +86,23 @@ class HTMLGenerator:
 
     def output(self):
         text = ''
-        self.split_to_lines()
-        self.check_for_double_char('>>', '<<', 'q')
-        self.check_for_stars('**', '**')
-        self.check_for_single_star('*', '*')
-        self.check_for_double_char('_!', '!_', 'ins')
-        self.check_for_double_char('-!', '!-', 'del')
-        self.check_for_href()
-        self.check_for_heading()
-        self.lines = generator.lines[0].split('\n')
+        self.check_chars('>>', '<<', '<q>', '</q>')
+        self.check_chars('**', '**', '<strong>', '</strong>')
+        self.check_chars('*', '*', '<em>', '</em>')
+        self.check_chars('_!', '!_', '<ins>', '</ins>')
+        self.check_chars('-!', '!-', '<del>', '</del>')
+        self.check_correct_characters(['>>', '<<', '*', '**', '-!', '!-', '_!', '!_'],
+                                      'Niepoprawnie domknięte znaki w linii')
+        try:
+            self.check_heading()
+        except IndexError:
+            print('Usuń puste linie z pliku!')
+            sys.exit()
+
+        self.check_correct_characters(['#', '{', '}'], 'Nie możesz tworzyć więcej niż jednego nagłówka w linii lub'
+                                                       'nagłówek został niepoprawnie stworzony.')
+        self.check_href()
+        self.check_correct_characters(['[', ']'], 'Niepoprawnie utworzony atrybut "<a href" w linii')
         for line in self.lines:
             text += line + '\n'
         self.write_to_file('output.html', text)
