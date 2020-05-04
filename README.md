@@ -78,7 +78,7 @@ Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: {typ|Tytuł} >>przykładowy_teks
 ```
 ---
 
-Nie możemy używać drugi raz tych samych znaczników co do tworzenia nagłówka.
+Nie możemy używać drugi raz tych samych znaków co do tworzenia nagłówka.
 
 ```
 Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: {typ|Tytuł} >>przykładowy_tekst { | }
