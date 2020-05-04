@@ -37,11 +37,11 @@ Wewnątrz linii
 Obejmuje całą linię, jeśli pierwszym znakiem jest #, to robimy nagłówek
 
 ```
-# Tekst ---> <h1 id=”nX”>Tekst</h1>
+#Tekst ---> <h1 id=”nX”>Tekst</h1>
 ```
 ---
 
-Objemuje całą linie jeśli jest pierwszym wyrazem
+Objemuje całą linie, nie musi być pierwszym wyrazem
 
 ```
 {typ|Tytuł} Tekst ---> <aside cat=”typ”><header>Tytuł</header><main>Tekst</main></aside>
@@ -57,24 +57,31 @@ przykładowy_tekst ---> <p>przykładowy_tekst</p>
 
 ### Zasady wprowadzania znaków
 
-Każdy wyraz, znacznik musi być oddzielony od siebie spacją
+Te same znaczniki powinny być w liczbie parzystej, inaczej program zwróci nam informacje o błędnym domknięciu znaków.
 
 ```
-Tak: **przykładowy_tekst** >>przykładowy_tekst2<< | Nie: **przykładowy_tekst**>>przykładowy_tekst2<<
-```
----
-
-Jeśli chcemy zrobić nagłówek w linii, wyrazy po pierwszym znaku jakim jest "#" muszą być oddzielone od niego spacją
-
-```
-Tak: # przykładowy_tekst | Nie: #przykładowy_tekst
+Tak: **przykładowy_tekst**>>przykładowy_tekst2<< | Nie: **przykładowy_tekst**>>**przykładowy_tekst2<<<<
 ```
 ---
 
-Jeśli chcemy zrobić znaczik "<aside..." w linii, musimy dać podać znacznik na początku linii
+Możemy zrobić tylko jeden nagłówek w linii.
 
 ```
-Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: >>przykładowy_tekst {typ|Tytuł}
+Tak: #przykładowy_tekst | Nie: ##przykładowy_tekst
+```
+---
+
+Możemy zrobić tylko jeden znacznik "<aside" w linii.
+
+```
+Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: {typ|Tytuł} >>przykładowy_tekst {typ|Tytuł}
+```
+---
+
+Nie możemy używać drugi raz tych samych znaczników co do tworzenia nagłówka.
+
+```
+Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: {typ|Tytuł} >>przykładowy_tekst { | }
 ```
 ---
 
