@@ -1,117 +1,120 @@
 # HTML-Code-Generator-Script
 
-Skrypt który przyjmuje na wejściu tekst sformatowany znacznikami opisanymi poniżej, po czym zwraca kod HTML w nowo utworzonym pliku lub informację o błędnym kodzie w wypadku niepoprawnych domknięć.
+A script that accepts text formatted with the tags described below, then returns the HTML code in the newly created file or error information in case of incorrect closing of characters.
 
-## Od czego zacząć
+## Getting Started
 
-Ta instrukcja pokaże Ci jak uruchomić skrypt na swoim systemie oraz jakich zasad powinienieś się trzymać.
+These instructions will get you a copy of the project up and running on your local machine.
 
-### Dostępne znaczniki i co generują
+### Available Tags and What They Generate
 
-Wewnątrz lini zagnieżdzanie
+Nesting inside the line
 
 ```
->>przykładowy_tekst<< ---> <q>przykładowy_tekst</q> 
+>>sample_text<< ---> <q>sample_text</q> 
 ```
 ```
-*przykładowy_tekst* ---> <em>przykładowy_tekst</em>
+*sample_text* ---> <em>sample_text</em>
 ```
 ```
-**przykładowy_tekst** ---> <strong>przykładowy_tekst</strong>
+**sample_text** ---> <strong>sample_text</strong>
 ```
 ```
-_!przykładowy_tekst!_ ---> <ins>przykładowy_tekst</ins>
+_!sample_text!_ ---> <ins>sample_text</ins>
 ```
 ```
--!przykładowy_tekst!- ---> <del>przykładowy_tekst</del>
+-!sample_text!- ---> <del>sample_text</del>
 ```
 ---
 
-Wewnątrz linii
+Inside the line
 
 ```
-[adres|tekst] ---> <a href=”adres”>tekst</a>
+[address|text] ---> <a href=”address”>text</a>
 ```
 ---
 
-Obejmuje całą linię, jeśli pierwszym znakiem jest #, to robimy nagłówek
+It covers the entire line, if the first character is #, then it make the header
 
 ```
-#Tekst ---> <h1 id=”nX”>Tekst</h1>
+#Text ---> <h1 id=”nX”>Text</h1>
 ```
 ---
 
-Objemuje całą linie, nie musi być pierwszym wyrazem
+It covers the entire line, it doesn't have to be the first word
 
 ```
-{typ|Tytuł} Tekst ---> <aside cat=”typ”><header>Tytuł</header><main>Tekst</main></aside>
+{type|Title} Text ---> <aside cat=”type”><header>Title</header><main>Text</main></aside>
 ```
 ---
 
-Linia nie tworząca nagłówka
+A line that does not create a header
 
 ```
-przykładowy_tekst ---> <p>przykładowy_tekst</p>
+sample_text ---> <p>sample_text</p>
 ```
 ---
 
-### Zasady wprowadzania znaków
+### Rules for Entering Characters
 
-Te same znaczniki powinny być w liczbie parzystej, inaczej program zwróci nam informacje o błędnym domknięciu znaków.
+The same markers should be even numbers, otherwise the program will return information about incorrect closing of characters.
 
 ```
-Tak: **przykładowy_tekst**>>przykładowy_tekst2<< | Nie: **przykładowy_tekst**>>**przykładowy_tekst2<<<<
+Like this: **sample_text**>>sample_text2<< | Not this: **sample_text**>>**sample_text2<<<<
 ```
 ---
 
-Możemy zrobić tylko jeden nagłówek w linii.
+We can only make one header per line.
 
 ```
-Tak: #przykładowy_tekst | Nie: ##przykładowy_tekst
+Like this: #sample_text | Not this: ##sample_text
 ```
 ---
 
-Możemy zrobić tylko jeden znacznik "<aside" w linii.
+We can only make one "<aside" tag per line.
 
 ```
-Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: {typ|Tytuł} >>przykładowy_tekst {typ|Tytuł}
+Like this: {type|Title} >>sample_text<< | Not this: {type|Title} >>sample_text {type|Title}
 ```
 ---
 
-Nie możemy używać drugi raz tych samych znaków co do tworzenia nagłówka.
+We can't use the same characters a second time to create a header.
 
 ```
-Tak: {typ|Tytuł} >>przykładowy_tekst<< | Nie: {typ|Tytuł} >>przykładowy_tekst { | }
+Like this: {type|Title} >>sample_text<< | Not this: {type|Title} >>sample_text { | }
 ```
 ---
 
-### Jak uruchomić skrypt
+### Running
 
 ```
-Stwórz nowy plik .txt, napisz w nim tekst sformatowany powyżej podanymi znacznikami
+Download project
 ```
 ```
-Wklej go do folderu z projektem gdzie znajduje się plik "generator.py"
+Create a new .txt file, write in it the text formatted with the tags provided above
 ```
 ```
-Uruchom terminal z wybranym folderem "HTML-Code-Generator-Script>"
+Paste the file into the project folder where the "generator.py" file is located
 ```
 ```
-Wpisz komende: python generator.py --file_name [twoja_nazwa_pliku]
+Open terminal with choosen folder "HTML-Code-Generator-Script>"
+```
+```
+Type "python generator.py --file_name [your_file_name]"
 ```
 
-Jeśli wykonałeś wszystko zgodnie z instrukcją, w folderze projektu powinien pojawić się nowy plik o nazwie "output.html", zawierający wygenerowany kod HTML
+If you did everything as instructed, a new file should appear in the project folder called "output.html" containing the generated HTML code
 
 ---
 
-## Stworzony za pomocą
+## Built With
 
-* [Python 3.8](https://www.python.org/) - język programowania
+* [Python 3.8](https://www.python.org/) - The programming language used
 
-## Autor
+## Authors
 
 * **Jan Kacper Sawicki** - [szypkiwonsz](https://github.com/szypkiwonsz)
 
-## Informacje dodatkowe
+## Acknowledgments
 
-* Skrypt został napisany jako zadanie na studia.
+* The script was written as a study assignment.
